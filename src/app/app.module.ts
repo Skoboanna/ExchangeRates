@@ -11,6 +11,9 @@ import { FormsModule } from '@angular/forms';
 import { ChartsModule } from 'ng2-charts';
 import { RateChartComponent } from './rate-chart/rate-chart.component';
 
+import { CurrencyService } from './services/currency.service';
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -25,9 +28,10 @@ import { RateChartComponent } from './rate-chart/rate-chart.component';
     HttpClientModule,
     FormsModule,
     ChartsModule
-
   ],
-  providers: [],
+  providers: [
+    CurrencyService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

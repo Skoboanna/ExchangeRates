@@ -1,6 +1,6 @@
 export interface Currency {
     type: string;
-    value: number;
+    rate: number;
     diff: number;
     icon: string;
 }

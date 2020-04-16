@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { CurrencyService } from '../currency.service';
-import { Currency } from '../currency.model';
+import { CurrencyService } from '../services/currency.service';
+import { Currency } from '../models/currency.model';
+import { sortObjectByKeys, getDateFromToday } from '../utilities/utils';
 
 @Component({
   selector: 'currency-table',
@@ -11,40 +12,35 @@ export class CurrencyTableComponent implements OnInit {
   public currencies: Currency[];
   public selectedBaseCurrency: string;
   public dateRangeCurrencies: any;
-  private displayedColumns: string[];
+  public displayedColumns: string[];
+  private startDate: string;
+  private endDate: string;
 
   constructor(private currencyService: CurrencyService) { }
 
   ngOnInit() {
-    this.displayedColumns = ['type', 'value', 'diff', 'icon'];;
-    this.getCurrencies();
+    this.displayedColumns = ['type', 'value', 'diff', 'icon'];
+    this.startDate = getDateFromToday(7);
+    this.endDate = getDateFromToday(0);
+    this.getExchangeRates();
   }
 
-  getCurrencies() {
-    let today = new Date();
-    let todayString = new Date().toISOString().slice(0, 10);
-    let startDate = new Date(today.setDate(today.getDate() - 7))
-    let startDateString = startDate.toISOString().substring(0, 10);
-
-    this.currencyService.getRatesForTimePeriod(startDateString, todayString).subscribe(rates => {
-      this.currencyService.setCurrentRates(this.currencyService.sortObjectByKeys(rates));
-      this.currencies = this.currencyService.ratesToday;
+  getExchangeRates() {
+    this.currencyService.getEuroRatesForTimePeriod(this.startDate, this.endDate).subscribe(rates => {
+      this.setRates(rates);
     });
   }
 
-  updateCurrencies() {
-    let today = new Date();
-    let todayString = new Date().toISOString().slice(0, 10);
-    let startDate = new Date(today.setDate(today.getDate() - 7))
-    let startDateString = startDate.toISOString().substring(0, 10);
-
-    this.currencyService.getCurrenciesByBase(this.selectedBaseCurrency, startDateString, todayString).subscribe(rates => {
-      this.currencyService.setCurrentRates(this.currencyService.sortObjectByKeys(rates));
-      this.currencies = this.currencyService.ratesToday;
+  updateExchangeRates() {
+    this.currencyService.getBaseRates(this.selectedBaseCurrency, this.startDate, this.endDate).subscribe(rates => {
+      this.setRates(rates);
     });
+  }
+
+  setRates(rates) {
+    this.currencyService.setCurrentRates(sortObjectByKeys(rates));
+    this.currencies = this.currencyService.ratesToday;
   }
 
   logCurrencies() { }
-
-
 }

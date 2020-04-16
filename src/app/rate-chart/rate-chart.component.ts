@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ChartDataSets, ChartOptions } from 'chart.js';
+import { ChartDataSets } from 'chart.js';
 import { Color, Label } from 'ng2-charts';
-import { CurrencyService } from '../currency.service';
+import { CurrencyService } from '../services/currency.service';
 import { ChangeDetectionStrategy } from '@angular/core';
+import { sortObjectByKeys, getDateFromToday } from '../utilities/utils';
 
 @Component({
   selector: 'rate-chart',
@@ -11,16 +12,20 @@ import { ChangeDetectionStrategy } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RateChartComponent implements OnInit {
-  chartLabels: Label[];
-  ratesData: any[];
-  chartData: ChartDataSets[];
+  public chartLabels: Label[];
+  public baseCurrencyRates: any[];
+  public chartData: ChartDataSets[];
+  private startDate: string;
+  private endDate: string;
 
   constructor(private currencyService: CurrencyService) { }
 
   ngOnInit() {
     this.chartLabels = [];
-    this.ratesData = [];
-    this.chartData = [{ data: this.ratesData, label: 'Base currency vs EUR' }];
+    this.baseCurrencyRates = [];
+    this.chartData = [{ data: this.baseCurrencyRates, label: 'Base currency vs EUR' }];
+    this.startDate = getDateFromToday(30);
+    this.endDate = getDateFromToday(0);
     this.getRatesByBaseCurrency();
   }
 
@@ -36,37 +41,33 @@ export class RateChartComponent implements OnInit {
   chartType = 'line';
 
   getRatesByBaseCurrency() {
-    let today = new Date();
-    let todayString = new Date().toISOString().slice(0, 10);
-    let startDate = new Date(today.setDate(today.getDate() - 30))
-    let startDateString = startDate.toISOString().substring(0, 10);
-
-    this.currencyService.getRatesByBaseAndSymbol(startDateString, todayString, 'EUR', 'PLN').subscribe(rates => {
+    this.currencyService.getRatesByBaseAndSymbol(this.startDate, this.endDate, 'EUR', 'PLN').subscribe(rates => {
       console.log(rates);
-      this.setChartLabels(rates);
-      this.ratesData = this.getChartData(rates);
-      Object.assign(this.chartData[0], { data: this.ratesData });
+      this.chartLabels = this.getChartLabels(rates, this.chartLabels);
+      this.baseCurrencyRates = this.getChartData(rates);
+      Object.assign(this.chartData[0], { data: this.baseCurrencyRates });
     });
   }
 
-  setChartLabels(data: object) {
-    let sortedObject = this.currencyService.sortObjectByKeys(data);
-    Object.keys(sortedObject).forEach(k => {
-      this.chartLabels.push(k);
+  getChartLabels(rates: object, labelsArray: Label[]) {
+    let sortedRates = sortObjectByKeys(rates);
+    Object.keys(sortedRates).forEach(date => {
+      labelsArray.push(date);
     });
+    return labelsArray;
   }
 
-  getChartData(data: object): number[] {
-    let sortedObject = this.currencyService.sortObjectByKeys(data);
-    let rates = [];
+  getChartData(ratesObject: object): number[] {
+    let sortedRates = sortObjectByKeys(ratesObject);
+    let baseRates = [];
 
-    Object.entries(sortedObject).forEach(([k, v]) => {
-      rates.push(v);
+    Object.entries(sortedRates).forEach(([date, rateObject]) => {
+      baseRates.push(rateObject);
     });
 
-    rates = rates.map(rate => {
+    baseRates = baseRates.map(rate => {
       return rate.PLN
     });
-    return rates;
+    return baseRates;
   }
 }

@@ -3,7 +3,7 @@
   <mat-select
     [(ngModel)]="selectedBaseCurrency"
     name="Base currency"
-    (selectionChange)="updateCurrencies()"
+    (selectionChange)="updateExchangeRates()"
   >
     <mat-option *ngFor="let currency of currencies" [value]="currency.type">
       {{ currency.type }}
@@ -20,7 +20,7 @@
   <!-- Name Column -->
   <ng-container matColumnDef="value">
     <mat-header-cell *matHeaderCellDef>Spot</mat-header-cell>
-    <mat-cell *matCellDef="let currency"> {{ currency.value }} </mat-cell>
+    <mat-cell *matCellDef="let currency"> {{ currency.rate }} </mat-cell>
   </ng-container>
 
   <ng-container matColumnDef="diff">
