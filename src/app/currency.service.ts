@@ -50,11 +50,28 @@ export class CurrencyService {
 
   calculateSpotDifference() {
     this.ratesToday.map((rate, index) => {
-      rate.diff = rate.value - this.ratesYesterday[index].value
+      rate.diff = (rate.value - this.ratesYesterday[index].value).toFixed(3)
+    });
+
+    this.ratesToday.forEach(rate => {
+      rate.icon = this.setIconName(rate.diff);
     });
   }
 
   //// utils /////
+
+  setIconName(spot): string {
+    let icoName;
+    if (spot == 0) {
+      icoName = 'trending_flat';
+    } else if (spot < 0) {
+      icoName = 'trending_down';
+    }
+    else {
+      icoName = 'trending_up';
+    }
+    return icoName;
+  }
 
   sortObjectByKeys(obj): any {
     const sortedObject = {};

@@ -48,5 +48,5 @@ export class CurrencyTableComponentComponent implements OnInit {
     console.log(this.dateRangeCurrencies);
   }
 
-  displayedColumns: string[] = ['type', 'value', 'diff'];
+  displayedColumns: string[] = ['type', 'value', 'diff', 'icon'];
 }
