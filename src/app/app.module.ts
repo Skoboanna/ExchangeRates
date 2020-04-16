@@ -3,27 +3,29 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { CurrencyTableComponentComponent } from './currency-table-component/currency-table-component.component';
+import { CurrencyTableComponent } from './currency-table/currency-table.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material.module';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-
-
+import { ChartsModule } from 'ng2-charts';
+import { RateChartComponent } from './rate-chart/rate-chart.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    CurrencyTableComponentComponent
+    CurrencyTableComponent,
+    RateChartComponent
   ],
-
   imports: [
     BrowserModule,
     AppRoutingModule,
     NoopAnimationsModule,
     MaterialModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    ChartsModule
+
   ],
   providers: [],
   bootstrap: [AppComponent]

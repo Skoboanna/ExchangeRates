@@ -4,17 +4,19 @@ import { Currency } from '../currency.model';
 
 @Component({
   selector: 'currency-table',
-  templateUrl: './currency-table-component.component.html',
-  styleUrls: ['./currency-table-component.component.scss']
+  templateUrl: './currency-table.component.html',
+  styleUrls: ['./currency-table.component.scss']
 })
-export class CurrencyTableComponentComponent implements OnInit {
+export class CurrencyTableComponent implements OnInit {
   public currencies: Currency[];
   public selectedBaseCurrency: string;
   public dateRangeCurrencies: any;
+  private displayedColumns: string[];
 
   constructor(private currencyService: CurrencyService) { }
 
   ngOnInit() {
+    this.displayedColumns = ['type', 'value', 'diff', 'icon'];;
     this.getCurrencies();
   }
 
@@ -42,11 +44,7 @@ export class CurrencyTableComponentComponent implements OnInit {
     });
   }
 
-  logCurrencies() {
-    console.log(this.currencies);
-    console.log(this.selectedBaseCurrency);
-    console.log(this.dateRangeCurrencies);
-  }
+  logCurrencies() { }
 
-  displayedColumns: string[] = ['type', 'value', 'diff', 'icon'];
+
 }

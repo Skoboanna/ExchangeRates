@@ -13,7 +13,7 @@ export class CurrencyService {
 
   constructor(private http: HttpClient) { }
 
-  getCurrencies(): Observable<any> {
+  getCurrencies(): Observable<any> { // change the name!!
     return this.http.get("https://api.exchangeratesapi.io/latest")
       .pipe(
         map((response: any) => {
@@ -37,6 +37,16 @@ export class CurrencyService {
       );
   }
 
+  getRatesByBaseAndSymbol(dateFrom: string, dateTo: string, base: string, symbol: string): Observable<JSON> {
+    return this.http.get(`https://api.exchangeratesapi.io/history?start_at=${dateFrom}&end_at=${dateTo}&base=${base}&symbols=${symbol}`)
+      .pipe(
+        map((response: any) => {
+          // this.ratesYesterday = Object.entries(response.rates).map(([k, v]) => (<Currency>{ type: k, value: v, diff: 0 }));
+          console.log(response);
+          return response.rates;
+        }))
+  }
+
   setCurrentRates(data) { // change the name...
     let todayKey = Object.keys(data).pop();
     let yesterdayKey = Object.keys(data)[Object.keys(data).length - 2];
@@ -50,7 +60,7 @@ export class CurrencyService {
 
   calculateSpotDifference() {
     this.ratesToday.map((rate, index) => {
-      rate.diff = (rate.value - this.ratesYesterday[index].value).toFixed(3)
+      rate.diff = +(rate.value - this.ratesYesterday[index].value).toFixed(3) // to change
     });
 
     this.ratesToday.forEach(rate => {
@@ -73,7 +83,7 @@ export class CurrencyService {
     return icoName;
   }
 
-  sortObjectByKeys(obj): any {
+  sortObjectByKeys(obj): object {
     const sortedObject = {};
     Object.keys(obj).sort().forEach(function (key) {
       sortedObject[key] = obj[key];
