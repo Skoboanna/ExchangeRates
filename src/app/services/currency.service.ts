@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map, pluck } from 'rxjs/operators';
 import { Currency } from '../models/currency.model';
 import { BehaviorSubject } from 'rxjs';

@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ChartDataSets } from 'chart.js';
 import { Color, Label } from 'ng2-charts';
 import { CurrencyService } from '../services/currency.service';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { sortObjectByKeys, getDateFromToday } from '../utilities/utils';
+import { BaseChartDirective } from 'ng2-charts';
 
 @Component({
   selector: 'rate-chart',
@@ -17,16 +18,24 @@ export class RateChartComponent implements OnInit {
   public chartData: ChartDataSets[];
   private startDate: string;
   private endDate: string;
+  private baseSymbol;
 
   constructor(private currencyService: CurrencyService) { }
+
+  @ViewChild(BaseChartDirective, { static: false })
+  public chart: BaseChartDirective;
 
   ngOnInit() {
     this.chartLabels = [];
     this.baseCurrencyRates = [];
+    this.baseSymbol = 'USD';
     this.chartData = [{ data: this.baseCurrencyRates, label: 'Base currency vs EUR' }];
     this.startDate = getDateFromToday(30);
     this.endDate = getDateFromToday(0);
-    this.getRatesByBaseCurrency();
+    this.currencyService.onBaseCurrencyChanged.subscribe(symbol => {
+      this.baseSymbol = symbol;
+      this.getRatesByBaseCurrency(this.baseSymbol);
+    });
   }
 
   chartOptions = {
@@ -40,12 +49,18 @@ export class RateChartComponent implements OnInit {
   chartLegend = true;
   chartType = 'line';
 
-  getRatesByBaseCurrency() {
-    this.currencyService.getRatesByBaseAndSymbol(this.startDate, this.endDate, 'EUR', 'PLN').subscribe(rates => {
-      console.log(rates);
+  updateChart() {
+    this.chart.chart.update();
+  }
+
+  getRatesByBaseCurrency(symbol) {
+    console.log(symbol);
+    this.currencyService.getRatesByBaseAndSymbol(this.startDate, this.endDate, 'EUR', symbol).subscribe(rates => {
+      this.chartLabels.length = 0;
       this.chartLabels = this.getChartLabels(rates, this.chartLabels);
       this.baseCurrencyRates = this.getChartData(rates);
       Object.assign(this.chartData[0], { data: this.baseCurrencyRates });
+      this.updateChart();
     });
   }
 
@@ -60,12 +75,18 @@ export class RateChartComponent implements OnInit {
   getChartData(ratesObject: object): number[] {
     let sortedRates = sortObjectByKeys(ratesObject);
     let baseRates = [];
+    let currencySymbol;
 
     Object.entries(sortedRates).forEach(([date, rateObject]) => {
       baseRates.push(rateObject);
     });
+    currencySymbol = Object.keys(baseRates[0])[0];
 
-    baseRates = baseRates.map(rate => rate.PLN);
+    baseRates = baseRates.map(rate => {
+      return rate[currencySymbol];
+    });
     return baseRates;
   }
+
+  ngOnDestroy() { }
 }

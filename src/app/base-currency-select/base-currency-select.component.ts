@@ -17,28 +17,31 @@ export class BaseCurrencySelectComponent implements OnInit {
   constructor(private currencyService: CurrencyService) { }
 
   ngOnInit() {
-    console.log("halo, init");
     this.startDate = getDateFromToday(7);
     this.endDate = getDateFromToday(0);
-    this.getExchangeRates();
+    this.initExchangeRates();
   }
 
-  getExchangeRates() {
+  initExchangeRates() {
     this.currencyService.getEuroRatesForTimePeriod(this.startDate, this.endDate).subscribe(rates => {
       this.setRates(rates);
     });
   }
 
   updateExchangeRates() {
+    this.currencyService.baseCurrencySymbol = this.selectedBaseCurrency; // ?
+    this.currencyService.onBaseCurrencyChanged.emit(this.selectedBaseCurrency);
     this.currencyService.getBaseRates(this.selectedBaseCurrency, this.startDate, this.endDate).subscribe(rates => {
       this.setRates(rates);
     });
+    console.log(this.currencyService.baseCurrencySymbol);
   }
 
   setRates(rates) {
     this.currencyService.setCurrentRates(sortObjectByKeys(rates));
     this.currencies = this.currencyService.ratesToday;
     this.currencyService.baseCurrency$.next(this.currencies);
+    this.currencyService.baseCurrencySymbol = this.selectedBaseCurrency;
     console.log(this.currencies);
   }
 }
