@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CurrencyService } from '../services/currency.service';
 import { Currency } from '../models/currency.model';
-import { sortObjectByKeys, getDateFromToday } from '../utilities/utils';
+import { getDateFromToday } from '../utilities/utils';
 
 @Component({
   selector: 'base-currency-select',
@@ -20,28 +20,18 @@ export class BaseCurrencySelectComponent implements OnInit {
     this.startDate = getDateFromToday(7);
     this.endDate = getDateFromToday(0);
     this.initExchangeRates();
+
+    this.currencyService.baseCurrency$.subscribe(rates => {
+      this.currencies = rates;
+    });
   }
 
   initExchangeRates() {
-    this.currencyService.getEuroRatesForTimePeriod(this.startDate, this.endDate).subscribe(rates => {
-      this.setRates(rates);
-    });
+    this.currencyService.initExchangeRates(this.startDate, this.endDate);
   }
 
   updateExchangeRates() {
-    this.currencyService.baseCurrencySymbol = this.selectedBaseCurrency; // ?
     this.currencyService.onBaseCurrencyChanged.emit(this.selectedBaseCurrency);
-    this.currencyService.getBaseRates(this.selectedBaseCurrency, this.startDate, this.endDate).subscribe(rates => {
-      this.setRates(rates);
-    });
-    console.log(this.currencyService.baseCurrencySymbol);
-  }
-
-  setRates(rates) {
-    this.currencyService.setCurrentRates(sortObjectByKeys(rates));
-    this.currencies = this.currencyService.ratesToday;
-    this.currencyService.baseCurrency$.next(this.currencies);
-    this.currencyService.baseCurrencySymbol = this.selectedBaseCurrency;
-    console.log(this.currencies);
+    this.currencyService.updateExchangeRates(this.selectedBaseCurrency, this.startDate, this.endDate);
   }
 }

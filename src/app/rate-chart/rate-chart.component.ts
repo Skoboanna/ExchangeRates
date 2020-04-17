@@ -28,7 +28,6 @@ export class RateChartComponent implements OnInit {
   ngOnInit() {
     this.chartLabels = [];
     this.baseCurrencyRates = [];
-    this.baseSymbol = 'USD';
     this.chartData = [{ data: this.baseCurrencyRates, label: 'Base currency vs EUR' }];
     this.startDate = getDateFromToday(30);
     this.endDate = getDateFromToday(0);

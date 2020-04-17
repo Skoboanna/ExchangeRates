@@ -6,17 +6,36 @@ import { Currency } from '../models/currency.model';
 import { BehaviorSubject } from 'rxjs';
 import { EventEmitter } from '@angular/core';
 
+import { sortObjectByKeys } from '../utilities/utils';
+
 @Injectable({
   providedIn: 'root'
 })
 export class CurrencyService {
   public ratesToday: Currency[];
   public ratesYesterday: any;
-  public baseCurrencySymbol = 'USD';
+  public baseCurrencySymbol = 'EUR';
   baseCurrency$ = new BehaviorSubject<Currency[]>(this.ratesToday);
   onBaseCurrencyChanged = new EventEmitter();
 
   constructor(private http: HttpClient) { }
+
+  updateExchangeRates(baseCurrency: string, dateFrom: string, dateTo: string) {
+    this.getBaseRates(baseCurrency, dateFrom, dateTo).subscribe(rates => {
+      this.setRates(rates);
+    });
+  }
+
+  initExchangeRates(dateFrom: string, dateTo: string) {
+    this.getEuroRatesForTimePeriod(dateFrom, dateTo).subscribe(rates => {
+      this.setRates(rates);
+    });
+  }
+
+  setRates(rates) {
+    this.setCurrentRates(sortObjectByKeys(rates));
+    this.baseCurrency$.next(this.ratesToday);
+  }
 
   getBaseRates(baseCurrency: string, dateFrom: string, dateTo: string): Observable<any> {
     return this.http.get(`https://api.exchangeratesapi.io/history?start_at=${dateFrom}&end_at=${dateTo}&base=${baseCurrency}`)
