@@ -12,13 +12,15 @@ import { ChartsModule } from 'ng2-charts';
 import { RateChartComponent } from './rate-chart/rate-chart.component';
 
 import { CurrencyService } from './services/currency.service';
+import { BaseCurrencySelectComponent } from './base-currency-select/base-currency-select.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     CurrencyTableComponent,
-    RateChartComponent
+    RateChartComponent,
+    BaseCurrencySelectComponent
   ],
   imports: [
     BrowserModule,

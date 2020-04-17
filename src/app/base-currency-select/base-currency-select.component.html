@@ -1,0 +1,13 @@
+<mat-form-field>
+  <mat-label>Base currency</mat-label>
+  <mat-select
+    [(ngModel)]="selectedBaseCurrency"
+    name="Base currency"
+    (selectionChange)="updateExchangeRates()"
+  >
+    <mat-option *ngFor="let currency of currencies" [value]="currency.type">
+      {{ currency.type }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+<ng-content></ng-content>
