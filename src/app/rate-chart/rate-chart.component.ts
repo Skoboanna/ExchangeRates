@@ -65,9 +65,7 @@ export class RateChartComponent implements OnInit {
       baseRates.push(rateObject);
     });
 
-    baseRates = baseRates.map(rate => {
-      return rate.PLN
-    });
+    baseRates = baseRates.map(rate => rate.PLN);
     return baseRates;
   }
 }

@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map, pluck } from 'rxjs/operators';
 import { Currency } from '../models/currency.model';
 import { BehaviorSubject } from 'rxjs';
+import { EventEmitter } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +12,9 @@ import { BehaviorSubject } from 'rxjs';
 export class CurrencyService {
   public ratesToday: Currency[];
   public ratesYesterday: any;
+  public baseCurrencySymbol = 'USD';
   baseCurrency$ = new BehaviorSubject<Currency[]>(this.ratesToday);
-  baseCurrencyChanged$ = this.baseCurrency$.asObservable();
+  onBaseCurrencyChanged = new EventEmitter();
 
   constructor(private http: HttpClient) { }
 
