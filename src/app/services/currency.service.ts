@@ -6,7 +6,7 @@ import { Currency } from '../models/currency.model';
 import { BehaviorSubject } from 'rxjs';
 import { EventEmitter } from '@angular/core';
 
-import { sortObjectByKeys } from '../utilities/utils';
+import { getOrderedListOfObjects } from '../utilities/utils';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +33,7 @@ export class CurrencyService {
   }
 
   setRates(rates) {
-    this.setCurrentRates(sortObjectByKeys(rates));
+    this.setCurrentRates(getOrderedListOfObjects(rates));
     this.baseCurrency$.next(this.ratesToday);
   }
 

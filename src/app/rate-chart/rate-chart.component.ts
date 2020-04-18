@@ -3,7 +3,7 @@ import { ChartDataSets } from 'chart.js';
 import { Color, Label } from 'ng2-charts';
 import { CurrencyService } from '../services/currency.service';
 import { ChangeDetectionStrategy } from '@angular/core';
-import { sortObjectByKeys, getDateFromToday } from '../utilities/utils';
+import { getOrderedListOfObjects, getDateFromToday, getOrderedObjectKeys } from '../utilities/utils';
 import { BaseChartDirective } from 'ng2-charts';
 
 @Component({
@@ -53,38 +53,31 @@ export class RateChartComponent implements OnInit {
   }
 
   getRatesByBaseCurrency(symbol) {
-    console.log(symbol);
     this.currencyService.getRatesByBaseAndSymbol(this.startDate, this.endDate, 'EUR', symbol).subscribe(rates => {
       this.chartLabels.length = 0;
       this.chartLabels = this.getChartLabels(rates, this.chartLabels);
       this.baseCurrencyRates = this.getChartData(rates);
       Object.assign(this.chartData[0], { data: this.baseCurrencyRates });
+      console.log(this.chartLabels);
+      console.log(this.baseCurrencyRates);
       this.updateChart();
     });
   }
 
-  getChartLabels(rates: object, labelsArray: Label[]) {
-    let sortedRates = sortObjectByKeys(rates);
-    Object.keys(sortedRates).forEach(date => {
-      labelsArray.push(date);
-    });
-    return labelsArray;
+  getChartLabels(rates: object, labels: Label[]) {
+    let sortedLabels = getOrderedObjectKeys(rates);
+    sortedLabels.forEach(label => labels.push(label));
+    return sortedLabels;
   }
 
-  getChartData(ratesObject: object): number[] {
-    let sortedRates = sortObjectByKeys(ratesObject);
-    let baseRates = [];
+  getChartData(ratesObject: object) {
+    let sortedRates = getOrderedListOfObjects(ratesObject);
     let currencySymbol;
-
-    Object.entries(sortedRates).forEach(([date, rateObject]) => {
-      baseRates.push(rateObject);
-    });
-    currencySymbol = Object.keys(baseRates[0])[0];
-
-    baseRates = baseRates.map(rate => {
+    currencySymbol = Object.keys(sortedRates[0])[0];
+    sortedRates = sortedRates.map(rate => {
       return rate[currencySymbol];
     });
-    return baseRates;
+    return sortedRates;
   }
 
   ngOnDestroy() { }
