@@ -13,6 +13,10 @@ import { RateChartComponent } from './rate-chart/rate-chart.component';
 
 import { CurrencyService } from './services/currency.service';
 import { BaseCurrencySelectComponent } from './base-currency-select/base-currency-select.component';
+import { LoaderComponent } from './loader/loader.component';
+import { LoaderService } from './services/loader.service';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { LoaderInterceptor } from './loader.interceptor';
 
 
 @NgModule({
@@ -20,7 +24,8 @@ import { BaseCurrencySelectComponent } from './base-currency-select/base-currenc
     AppComponent,
     CurrencyTableComponent,
     RateChartComponent,
-    BaseCurrencySelectComponent
+    BaseCurrencySelectComponent,
+    LoaderComponent
   ],
   imports: [
     BrowserModule,
@@ -32,7 +37,13 @@ import { BaseCurrencySelectComponent } from './base-currency-select/base-currenc
     ChartsModule
   ],
   providers: [
-    CurrencyService
+    CurrencyService,
+    LoaderService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoaderInterceptor,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })

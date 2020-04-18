@@ -5,6 +5,7 @@ import { CurrencyService } from '../services/currency.service';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { getOrderedListOfObjects, getDateFromToday, getOrderedObjectKeys } from '../utilities/utils';
 import { BaseChartDirective } from 'ng2-charts';
+import { LoaderService } from '../services/loader.service';
 
 @Component({
   selector: 'rate-chart',
@@ -20,12 +21,13 @@ export class RateChartComponent implements OnInit {
   private endDate: string;
   private baseSymbol;
 
-  constructor(private currencyService: CurrencyService) { }
+  constructor(private currencyService: CurrencyService, private loaderService: LoaderService) { }
 
   @ViewChild(BaseChartDirective, { static: false })
   public chart: BaseChartDirective;
 
   ngOnInit() {
+    this.loaderService.startLoading();
     this.chartLabels = [];
     this.baseCurrencyRates = [];
     this.chartData = [{ data: this.baseCurrencyRates, label: 'Base currency vs EUR' }];

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CurrencyService } from '../services/currency.service';
 import { Currency } from '../models/currency.model';
 import { getDateFromToday } from '../utilities/utils';
+import { LoaderService } from '../services/loader.service';
 
 @Component({
   selector: 'base-currency-select',
@@ -14,15 +15,18 @@ export class BaseCurrencySelectComponent implements OnInit {
   private startDate: string;
   private endDate: string;
 
-  constructor(private currencyService: CurrencyService) { }
+  constructor(private currencyService: CurrencyService, private loaderService: LoaderService) { }
 
   ngOnInit() {
     this.startDate = getDateFromToday(7);
     this.endDate = getDateFromToday(0);
     this.initExchangeRates();
+    // this.loaderService.startLoading();
 
     this.currencyService.baseCurrency$.subscribe(rates => {
+      // this.loaderService.startLoading();
       this.currencies = rates;
+      // this.loaderService.stopLoading();
     });
   }
 
