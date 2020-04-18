@@ -11,18 +11,29 @@
     <mat-cell *matCellDef="let currency"> {{ currency.rate }} </mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="diff">
+  <ng-container matColumnDef="icon">
     <mat-header-cell *matHeaderCellDef>Increase/Decrease</mat-header-cell>
+    <mat-cell *matCellDef="let currency"
+      ><mat-icon>{{ currency.icon }}</mat-icon></mat-cell
+    >
+  </ng-container>
+
+  <ng-container matColumnDef="diff">
+    <mat-header-cell *matHeaderCellDef>Difference</mat-header-cell>
     <mat-cell *matCellDef="let currency">{{ currency.diff }}</mat-cell>
   </ng-container>
 
-  <ng-container matColumnDef="icon">
-    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+  <ng-container matColumnDef="chart">
+    <mat-header-cell *matHeaderCellDef>Chart</mat-header-cell>
     <mat-cell *matCellDef="let currency"
-      ><mat-icon>{{ currency.icon }}</mat-icon></mat-cell
+      ><mat-icon (click)="createComponent('success')"
+        >bar_chart</mat-icon
+      ></mat-cell
     >
   </ng-container>
 
   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
   <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
 </mat-table>
+
+<template #alertContainer></template>

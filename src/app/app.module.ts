@@ -17,6 +17,7 @@ import { LoaderComponent } from './loader/loader.component';
 import { LoaderService } from './services/loader.service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { LoaderInterceptor } from './loader.interceptor';
+import { RatePopupComponent } from './rate-popup/rate-popup.component';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import { LoaderInterceptor } from './loader.interceptor';
     CurrencyTableComponent,
     RateChartComponent,
     BaseCurrencySelectComponent,
-    LoaderComponent
+    LoaderComponent,
+    RatePopupComponent
   ],
   imports: [
     BrowserModule,
@@ -45,6 +47,7 @@ import { LoaderInterceptor } from './loader.interceptor';
       multi: true
     }
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [RatePopupComponent]
 })
 export class AppModule { }

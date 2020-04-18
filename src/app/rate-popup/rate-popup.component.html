@@ -1,0 +1,14 @@
+<div class="modal">
+  <div class="modal_content">
+    <ng-content></ng-content>
+    <button title="Close" class="close_modal" (click)="onClose()">
+      <i>x</i>
+    </button>
+    <section [@fadeInOut]>
+      <h1>siemanko</h1>
+      <section>
+        <div (click)="ngOnDestroy()"></div>
+      </section>
+    </section>
+  </div>
+</div>
