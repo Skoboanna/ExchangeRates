@@ -10,6 +10,7 @@ import {
 
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
@@ -28,6 +29,7 @@ import { BrowserModule } from '@angular/platform-browser';
         MatToolbarModule,
         MatTabsModule,
         BrowserAnimationsModule,
+        MatProgressSpinnerModule
     ]
 })
 export class MaterialModule { }
