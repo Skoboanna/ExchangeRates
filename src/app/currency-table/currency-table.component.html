@@ -26,7 +26,7 @@
   <ng-container matColumnDef="chart">
     <mat-header-cell *matHeaderCellDef>Chart</mat-header-cell>
     <mat-cell *matCellDef="let currency"
-      ><mat-icon (click)="createComponent('success')"
+      ><mat-icon (click)="createComponent(currency.type)"
         >bar_chart</mat-icon
       ></mat-cell
     >

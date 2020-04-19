@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { ChartDataSets } from 'chart.js';
 import { Color, Label } from 'ng2-charts';
 import { CurrencyService } from '../services/currency.service';
@@ -26,13 +26,17 @@ export class RateChartComponent implements OnInit {
   @ViewChild(BaseChartDirective, { static: false })
   public chart: BaseChartDirective;
 
+  @Input() symbol: string;
+
   ngOnInit() {
-    this.loaderService.startLoading();
+    console.log("CHART INIT");
+    // this.loaderService.startLoading();
     this.chartLabels = [];
     this.baseCurrencyRates = [];
     this.chartData = [{ data: this.baseCurrencyRates, label: 'Base currency vs EUR' }];
     this.startDate = getDateFromToday(30);
     this.endDate = getDateFromToday(0);
+    this.getRatesByBaseCurrency(this.symbol);
     this.currencyService.onBaseCurrencyChanged.subscribe(symbol => {
       this.baseSymbol = symbol;
       this.getRatesByBaseCurrency(this.baseSymbol);
@@ -55,6 +59,7 @@ export class RateChartComponent implements OnInit {
   }
 
   getRatesByBaseCurrency(symbol) {
+    console.log(symbol);
     this.currencyService.getRatesByBaseAndSymbol(this.startDate, this.endDate, 'EUR', symbol).subscribe(rates => {
       this.chartLabels.length = 0;
       this.chartLabels = this.getChartLabels(rates, this.chartLabels);

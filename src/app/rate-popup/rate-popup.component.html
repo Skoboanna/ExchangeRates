@@ -5,10 +5,8 @@
       <i>x</i>
     </button>
     <section [@fadeInOut]>
-      <h1>siemanko</h1>
-      <section>
-        <div (click)="ngOnDestroy()"></div>
-      </section>
+      <h1>Base currency vs {{ symbol }}</h1>
+      <rate-chart [symbol]="symbol"></rate-chart>
     </section>
   </div>
 </div>

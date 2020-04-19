@@ -33,11 +33,11 @@ export class CurrencyTableComponent implements OnInit {
     });
   }
 
-  createComponent(type) {
+  createComponent(symbol) {
     this.showChart = true;
     const factory = this.resolver.resolveComponentFactory(RatePopupComponent);
     this.componentRef = this.container.createComponent(factory);
-    this.componentRef.instance.type = type;
+    this.componentRef.instance.symbol = symbol;
     this.componentRef.instance.close.subscribe(value => {
       this.componentRef.destroy();
     }
