@@ -20,19 +20,16 @@ import { trigger, style, animate, transition } from '@angular/animations';
 export class RatePopupComponent implements OnInit {
   @Output() close = new EventEmitter();
   @Output() symbol: string;
+  @Output() baseSymbol: string;
 
   constructor() { }
 
-  ngOnInit() {
-    console.log("created");
-  }
+  ngOnInit() { }
 
   onClose() {
     this.close.emit();
   }
 
-  ngOnDestroy() {
-    console.log("DESTROYED");
-  }
-
+  ngOnDestroy() { }
 }
+

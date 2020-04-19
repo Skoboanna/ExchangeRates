@@ -2,7 +2,8 @@ import {
   Component, OnInit, ViewChild,
   ViewContainerRef,
   ComponentFactoryResolver,
-  ComponentRef
+  ComponentRef,
+  Input
 } from '@angular/core';
 import { CurrencyService } from '../services/currency.service';
 import { Currency } from '../models/currency.model';
@@ -16,10 +17,11 @@ import { RatePopupComponent } from '../rate-popup/rate-popup.component';
 })
 export class CurrencyTableComponent implements OnInit {
   currencies: Currency[];
-  selectedBaseCurrency: string;
   dateRangeCurrencies: any;
   displayedColumns: string[];
   showChart: boolean = true;
+
+  @Input() baseSymbol: string;
 
   constructor(private currencyService: CurrencyService, private resolver: ComponentFactoryResolver) { }
   @ViewChild("alertContainer", { read: ViewContainerRef, static: false }) container: ViewContainerRef;
@@ -27,10 +29,13 @@ export class CurrencyTableComponent implements OnInit {
 
   ngOnInit() {
     this.displayedColumns = ['type', 'value', 'diff', 'icon', 'chart'];
+    this.baseSymbol = this.currencyService.baseCurrencySymbol;
 
     this.currencyService.baseCurrency$.subscribe(rates => {
       this.currencies = rates;
     });
+
+    this.currencyService.onBaseCurrencyChanged.subscribe(baseCurrencySymbol => this.baseSymbol = baseCurrencySymbol);
   }
 
   createComponent(symbol) {
@@ -38,6 +43,7 @@ export class CurrencyTableComponent implements OnInit {
     const factory = this.resolver.resolveComponentFactory(RatePopupComponent);
     this.componentRef = this.container.createComponent(factory);
     this.componentRef.instance.symbol = symbol;
+    this.componentRef.instance.baseSymbol = this.baseSymbol;
     this.componentRef.instance.close.subscribe(value => {
       this.componentRef.destroy();
     }

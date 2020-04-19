@@ -14,9 +14,9 @@ import { getOrderedListOfObjects } from '../utilities/utils';
 export class CurrencyService {
   public ratesToday: Currency[];
   public ratesYesterday: any;
-  public baseCurrencySymbol = 'EUR';
   baseCurrency$ = new BehaviorSubject<Currency[]>(this.ratesToday);
   onBaseCurrencyChanged = new EventEmitter();
+  baseCurrencySymbol: string;
 
   constructor(private http: HttpClient) { }
 
@@ -24,12 +24,14 @@ export class CurrencyService {
     this.getBaseRates(baseCurrency, dateFrom, dateTo).subscribe(rates => {
       this.setRates(rates);
     });
+    this.baseCurrencySymbol = baseCurrency;
   }
 
   initExchangeRates(dateFrom: string, dateTo: string) {
     this.getEuroRatesForTimePeriod(dateFrom, dateTo).subscribe(rates => {
       this.setRates(rates);
     });
+    this.baseCurrencySymbol = 'EUR';
   }
 
   setRates(rates) {
@@ -56,7 +58,7 @@ export class CurrencyService {
       .pipe(
         map((response: any) => {
           // map response to desired object ??
-          console.log(response);
+          // console.log(response);
           return response.rates;
         }))
   }

@@ -15,6 +15,5 @@ export function getOrderedListOfObjects(objectList): object[] {
     let sortedKeys = getOrderedObjectKeys(objectList);
     let orderedListOfObjects = [];
     sortedKeys.forEach(key => orderedListOfObjects.push(objectList[key]));
-    console.log(orderedListOfObjects);
     return orderedListOfObjects;
 }

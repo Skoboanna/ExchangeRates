@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, SimpleChanges } from '@angular/core';
 import { ChartDataSets } from 'chart.js';
 import { Color, Label } from 'ng2-charts';
 import { CurrencyService } from '../services/currency.service';
@@ -19,27 +19,30 @@ export class RateChartComponent implements OnInit {
   public chartData: ChartDataSets[];
   private startDate: string;
   private endDate: string;
-  private baseSymbol;
 
   constructor(private currencyService: CurrencyService, private loaderService: LoaderService) { }
 
-  @ViewChild(BaseChartDirective, { static: false })
-  public chart: BaseChartDirective;
+  @ViewChild(BaseChartDirective, { static: true })
+  chart: BaseChartDirective;
+  baseCurrencyChangeSubscriber: any;
 
   @Input() symbol: string;
+  @Input() baseSymbol: string;
 
   ngOnInit() {
+
     console.log("CHART INIT");
-    // this.loaderService.startLoading();
+    console.log("baseS: " + this.baseSymbol, "symbol: " + this.symbol);
+
     this.chartLabels = [];
     this.baseCurrencyRates = [];
     this.chartData = [{ data: this.baseCurrencyRates, label: 'Base currency vs EUR' }];
     this.startDate = getDateFromToday(30);
     this.endDate = getDateFromToday(0);
-    this.getRatesByBaseCurrency(this.symbol);
-    this.currencyService.onBaseCurrencyChanged.subscribe(symbol => {
+    this.getRatesByBaseCurrency(this.symbol, this.baseSymbol);
+    this.baseCurrencyChangeSubscriber = this.currencyService.onBaseCurrencyChanged.subscribe(symbol => {
       this.baseSymbol = symbol;
-      this.getRatesByBaseCurrency(this.baseSymbol);
+      this.getRatesByBaseCurrency(this.symbol, this.baseSymbol);
     });
   }
 
@@ -58,15 +61,22 @@ export class RateChartComponent implements OnInit {
     this.chart.chart.update();
   }
 
-  getRatesByBaseCurrency(symbol) {
-    console.log(symbol);
-    this.currencyService.getRatesByBaseAndSymbol(this.startDate, this.endDate, 'EUR', symbol).subscribe(rates => {
+  getRatesByBaseCurrency(currencySymbol, baseSymbol) {
+    this.loaderService.startLoading();
+    console.log(currencySymbol, baseSymbol);
+    if (currencySymbol === baseSymbol) {
+      this.chartLabels.length = 0;
+      Object.assign(this.chartData[0], { data: [] });
+      console.log("bierej inno walute");
+      this.loaderService.stopLoading();
+      return;
+    }
+    this.currencyService.getRatesByBaseAndSymbol(this.startDate, this.endDate, currencySymbol, baseSymbol).subscribe(rates => {
+      console.log(rates);
       this.chartLabels.length = 0;
       this.chartLabels = this.getChartLabels(rates, this.chartLabels);
       this.baseCurrencyRates = this.getChartData(rates);
       Object.assign(this.chartData[0], { data: this.baseCurrencyRates });
-      console.log(this.chartLabels);
-      console.log(this.baseCurrencyRates);
       this.updateChart();
     });
   }
@@ -87,5 +97,9 @@ export class RateChartComponent implements OnInit {
     return sortedRates;
   }
 
-  ngOnDestroy() { }
+  ngOnDestroy() {
+    console.log("CHART DESTROYED");
+    this.baseCurrencyChangeSubscriber.unsubscribe();
+    // this.chart.chart.destroy();
+  }
 }

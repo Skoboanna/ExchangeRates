@@ -2,6 +2,10 @@
 <base-currency-select></base-currency-select>
 <mat-tab-group>
   <mat-tab label="Latest rates"><currency-table></currency-table></mat-tab>
-  <mat-tab label="Last 30 days"><rate-chart></rate-chart></mat-tab>
+  <mat-tab label="Last 30 days">
+    <ng-template matTabContent>
+      <app-rate-chart-view></app-rate-chart-view>
+    </ng-template>
+  </mat-tab>
   <mat-tab label="TOP 5"> ** TODO ** </mat-tab>
 </mat-tab-group>
