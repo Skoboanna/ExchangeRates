@@ -6,7 +6,11 @@
     </button>
     <section [@fadeInOut]>
       <h1>{{ symbol }} vs. {{ baseSymbol }}</h1>
-      <rate-chart [symbol]="symbol" [baseSymbol]="baseSymbol"></rate-chart>
+      <rate-chart
+        [symbol]="symbol"
+        [baseSymbol]="baseSymbol"
+        [chartLegend]="false"
+      ></rate-chart>
     </section>
   </div>
 </div>

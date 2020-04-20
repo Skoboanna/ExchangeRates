@@ -24,7 +24,7 @@ export class CurrencyTableComponent implements OnInit {
   @Input() baseSymbol: string;
 
   constructor(private currencyService: CurrencyService, private resolver: ComponentFactoryResolver) { }
-  @ViewChild("alertContainer", { read: ViewContainerRef, static: false }) container: ViewContainerRef;
+  @ViewChild("rateChartPopupContainer", { read: ViewContainerRef, static: false }) container: ViewContainerRef;
   componentRef: ComponentRef<any>;
 
   ngOnInit() {
@@ -45,6 +45,7 @@ export class CurrencyTableComponent implements OnInit {
     this.componentRef = this.container.createComponent(factory);
     this.componentRef.instance.symbol = this.baseSymbol;
     this.componentRef.instance.baseSymbol = symbol;
+    this.componentRef.instance.chartLegend = false;
     this.componentRef.instance.close.subscribe(value => {
       this.componentRef.destroy();
     }

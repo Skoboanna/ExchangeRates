@@ -19,6 +19,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { LoaderInterceptor } from './loader.interceptor';
 import { RatePopupComponent } from './rate-popup/rate-popup.component';
 import { RateChartViewComponent } from './rate-chart-view/rate-chart-view.component';
+import { RateDifferenceTableComponent } from './rate-difference-table/rate-difference-table.component';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { RateChartViewComponent } from './rate-chart-view/rate-chart-view.compon
     BaseCurrencySelectComponent,
     LoaderComponent,
     RatePopupComponent,
-    RateChartViewComponent
+    RateChartViewComponent,
+    RateDifferenceTableComponent
   ],
   imports: [
     BrowserModule,

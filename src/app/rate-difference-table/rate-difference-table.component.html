@@ -1,0 +1,37 @@
+<mat-button-toggle-group
+  #group="matButtonToggleGroup"
+  class="toggleGroup"
+  [value]="selectedDiffValue"
+  (change)="onSelectedDiffValueChange(group.value)"
+>
+  <mat-button-toggle value="increase">
+    <mat-icon>trending_up</mat-icon>
+  </mat-button-toggle>
+  <mat-button-toggle value="decrease">
+    <mat-icon>trending_down</mat-icon>
+  </mat-button-toggle>
+</mat-button-toggle-group>
+
+<mat-table [dataSource]="currencies" class="mat-elevation-z8">
+  <!-- Position Column -->
+  <ng-container matColumnDef="type">
+    <mat-header-cell *matHeaderCellDef>Currency</mat-header-cell>
+    <mat-cell *matCellDef="let currency"> {{ currency.type }} </mat-cell>
+  </ng-container>
+
+  <!-- Name Column -->
+  <ng-container matColumnDef="diff">
+    <mat-header-cell *matHeaderCellDef>Difference</mat-header-cell>
+    <mat-cell *matCellDef="let currency">{{ currency.diff }}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="value">
+    <mat-header-cell *matHeaderCellDef>%</mat-header-cell>
+    <mat-cell *matCellDef="let currency">{{
+      currency.percentageDiff
+    }}</mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+</mat-table>

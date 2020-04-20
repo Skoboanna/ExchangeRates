@@ -18,7 +18,6 @@ export class RateChartViewComponent implements OnInit {
     this.baseSymbol = this.currencyService.baseCurrencySymbol;
     this.baseCurrencyChangeSubscriber = this.currencyService.onBaseCurrencyChanged.subscribe(symbol => {
       this.baseSymbol = symbol;
-      console.log("VIEW: " + this.baseSymbol);
     });
   }
 

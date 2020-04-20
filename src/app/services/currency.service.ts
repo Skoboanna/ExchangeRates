@@ -56,11 +56,8 @@ export class CurrencyService {
   getRatesByBaseAndSymbol(dateFrom: string, dateTo: string, base: string, symbol: string): Observable<JSON> {
     return this.http.get(`https://api.exchangeratesapi.io/history?start_at=${dateFrom}&end_at=${dateTo}&base=${base}&symbols=${symbol}`)
       .pipe(
-        map((response: any) => {
-          // map response to desired object ??
-          // console.log(response);
-          return response.rates;
-        }))
+        pluck('rates')
+      );
   }
 
   setCurrentRates(ratesByDate) {
@@ -75,7 +72,8 @@ export class CurrencyService {
 
   calculateSpotDifference() {
     this.ratesToday.map((currency, index) => {
-      currency.diff = +(currency.rate - this.ratesYesterday[index].rate).toFixed(3) // to change (may cause performance issues)
+      currency.diff = +(currency.rate - this.ratesYesterday[index].rate).toFixed(6) // TODO to change (may cause performance issues)
+      currency.percentageDiff = +((currency.rate - this.ratesYesterday[index].rate) / currency.rate * 100).toFixed(3)
     });
 
     this.ratesToday.forEach(rate => {
@@ -90,14 +88,12 @@ export class CurrencyService {
   }
 
   setIconName(spot): string {
-    let icoName;
     if (spot == 0) {
-      icoName = 'trending_flat';
+      return 'trending_flat';
     } else if (spot < 0) {
-      icoName = 'trending_down';
+      return 'trending_down';
     } else {
-      icoName = 'trending_up';
+      return 'trending_up';
     }
-    return icoName;
   }
 }

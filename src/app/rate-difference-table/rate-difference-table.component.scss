@@ -1,0 +1,13 @@
+.toggleGroup {
+    margin-bottom: 2em;
+
+    .mat-button-toggle {
+        background-color: rgb(235, 236, 241);
+    }
+
+    .mat-button-toggle-checked {
+        // border: 1px solid #c5c0c7;
+        color: #4237e0;
+        background-color: white;
+    }
+}
