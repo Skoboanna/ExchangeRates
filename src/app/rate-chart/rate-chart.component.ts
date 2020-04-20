@@ -42,7 +42,8 @@ export class RateChartComponent implements OnInit {
     this.getRatesByBaseCurrency(this.symbol, this.baseSymbol);
     this.baseCurrencyChangeSubscriber = this.currencyService.onBaseCurrencyChanged.subscribe(symbol => {
       this.baseSymbol = symbol;
-      this.getRatesByBaseCurrency(this.symbol, this.baseSymbol);
+      console.log("CHART: " + symbol);
+      this.getRatesByBaseCurrency(this.baseSymbol, this.symbol);
     });
   }
 

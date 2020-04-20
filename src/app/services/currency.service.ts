@@ -12,8 +12,8 @@ import { getOrderedListOfObjects } from '../utilities/utils';
   providedIn: 'root'
 })
 export class CurrencyService {
-  public ratesToday: Currency[];
-  public ratesYesterday: any;
+  public ratesToday: Currency[] = [];
+  public ratesYesterday: any = [];
   baseCurrency$ = new BehaviorSubject<Currency[]>(this.ratesToday);
   onBaseCurrencyChanged = new EventEmitter();
   baseCurrencySymbol: string;
@@ -27,11 +27,11 @@ export class CurrencyService {
     this.baseCurrencySymbol = baseCurrency;
   }
 
-  initExchangeRates(dateFrom: string, dateTo: string) {
+  initExchangeRates(baseCurrency: string, dateFrom: string, dateTo: string) {
     this.getEuroRatesForTimePeriod(dateFrom, dateTo).subscribe(rates => {
       this.setRates(rates);
     });
-    this.baseCurrencySymbol = 'EUR';
+    this.baseCurrencySymbol = baseCurrency;
   }
 
   setRates(rates) {
@@ -66,8 +66,10 @@ export class CurrencyService {
   setCurrentRates(ratesByDate) {
     let todayKey = Object.keys(ratesByDate).pop();
     let yesterdayKey = Object.keys(ratesByDate)[Object.keys(ratesByDate).length - 2];
+
     this.ratesToday = this.mapToCurrencyList(ratesByDate[todayKey]);
     this.ratesYesterday = this.mapToCurrencyList(ratesByDate[yesterdayKey]);
+
     this.calculateSpotDifference();
   }
 

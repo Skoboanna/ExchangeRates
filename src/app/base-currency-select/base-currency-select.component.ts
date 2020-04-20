@@ -11,27 +11,27 @@ import { LoaderService } from '../services/loader.service';
 })
 export class BaseCurrencySelectComponent implements OnInit {
   public selectedBaseCurrency: string;
-  public currencies: Currency[];
+  public currencies: Currency[] = [];
   private startDate: string;
   private endDate: string;
 
   constructor(private currencyService: CurrencyService, private loaderService: LoaderService) { }
 
   ngOnInit() {
+    this.selectedBaseCurrency = 'EUR';
     this.startDate = getDateFromToday(7);
     this.endDate = getDateFromToday(0);
+
     this.initExchangeRates();
-    // this.loaderService.startLoading();
 
     this.currencyService.baseCurrency$.subscribe(rates => {
-      // this.loaderService.startLoading();
       this.currencies = rates;
-      // this.loaderService.stopLoading();
+      this.currencies.push(<Currency>{ type: 'EUR', rate: 1 });
     });
   }
 
   initExchangeRates() {
-    this.currencyService.initExchangeRates(this.startDate, this.endDate);
+    this.currencyService.initExchangeRates('EUR', this.startDate, this.endDate);
   }
 
   updateExchangeRates() {

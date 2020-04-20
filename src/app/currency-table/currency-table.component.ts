@@ -33,6 +33,7 @@ export class CurrencyTableComponent implements OnInit {
 
     this.currencyService.baseCurrency$.subscribe(rates => {
       this.currencies = rates;
+      this.currencies = this.currencies.filter(currency => currency.rate !== 1);
     });
 
     this.currencyService.onBaseCurrencyChanged.subscribe(baseCurrencySymbol => this.baseSymbol = baseCurrencySymbol);
@@ -42,8 +43,8 @@ export class CurrencyTableComponent implements OnInit {
     this.showChart = true;
     const factory = this.resolver.resolveComponentFactory(RatePopupComponent);
     this.componentRef = this.container.createComponent(factory);
-    this.componentRef.instance.symbol = symbol;
-    this.componentRef.instance.baseSymbol = this.baseSymbol;
+    this.componentRef.instance.symbol = this.baseSymbol;
+    this.componentRef.instance.baseSymbol = symbol;
     this.componentRef.instance.close.subscribe(value => {
       this.componentRef.destroy();
     }
