@@ -32,6 +32,7 @@ export class RateDifferenceTableComponent implements OnInit {
 
   onSelectedDiffValueChange(value) {
     this.selectedDiffValue = value;
+
     if (value === "increase") {
       this.currencies = this.currenciesIncrease;
     } else if (value === "decrease") {
@@ -46,22 +47,10 @@ export class RateDifferenceTableComponent implements OnInit {
   }
 
   compareDecrease(rate1, rate2) {
-    if (rate1.percentageDiff < rate2.percentageDiff) {
-      return -1;
-    } else if (rate1.percentageDiff > rate1.percentageDiff) {
-      return 1;
-    } else {
-      return 0;
-    }
+    return rate1.percentageDiff - rate2.percentageDiff;
   }
 
   compareIncrease(rate1, rate2) {
-    if (rate1.percentageDiff > rate2.percentageDiff) {
-      return -1;
-    } else if (rate1.percentageDiff < rate1.percentageDiff) {
-      return 1;
-    } else {
-      return 0;
-    }
+    return rate2.percentageDiff - rate1.percentageDiff;
   }
 }
