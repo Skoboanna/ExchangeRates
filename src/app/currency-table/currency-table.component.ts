@@ -43,8 +43,8 @@ export class CurrencyTableComponent implements OnInit {
     this.showChart = true;
     const factory = this.resolver.resolveComponentFactory(RatePopupComponent);
     this.componentRef = this.container.createComponent(factory);
-    this.componentRef.instance.symbol = this.baseSymbol;
-    this.componentRef.instance.baseSymbol = symbol;
+    this.componentRef.instance.symbol = symbol;
+    this.componentRef.instance.baseSymbol = this.baseSymbol;
     this.componentRef.instance.chartLegend = false;
     this.componentRef.instance.close.subscribe(value => {
       this.componentRef.destroy();

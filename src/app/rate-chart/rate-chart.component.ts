@@ -35,7 +35,7 @@ export class RateChartComponent implements OnInit {
     this.chartData = [{ data: this.baseCurrencyRates, label: `${this.baseSymbol} vs ${this.symbol}` }];
     this.startDate = getDateFromToday(30);
     this.endDate = getDateFromToday(0);
-    this.getRatesByBaseCurrency(this.symbol, this.baseSymbol);
+    this.getRatesByBaseCurrency(this.baseSymbol, this.symbol);
     this.baseCurrencyChangeSubscriber = this.currencyService.onBaseCurrencyChanged.subscribe(symbol => {
       this.baseSymbol = symbol;
       this.getRatesByBaseCurrency(this.baseSymbol, this.symbol);
@@ -64,6 +64,7 @@ export class RateChartComponent implements OnInit {
       this.loaderService.stopLoading();
       return;
     }
+    console.log(currencySymbol + " " + baseSymbol);
     this.currencyService.getRatesByBaseAndSymbol(this.startDate, this.endDate, currencySymbol, baseSymbol).subscribe(rates => {
       this.chartLabels.length = 0;
       this.chartLabels = this.getChartLabels(rates, this.chartLabels);
